@@ -4,7 +4,7 @@ import sqlite3
 import pandas as pd
 
 def create_table_if_not_exists():
-    conn = sqlite3.connect("75hard.sqlite3")
+    conn = sqlite3.connect("75hard.db")
     c = conn.cursor()
     c.execute('''CREATE TABLE IF NOT EXISTS progress (
                     id INTEGER PRIMARY KEY,
@@ -17,7 +17,7 @@ def create_table_if_not_exists():
     conn.close()
     
 def save_checkbox_status(participant, rule_num, day, checked):
-    conn = sqlite3.connect("75hard.sqlite3")
+    conn = sqlite3.connect("75hard.db")
     c = conn.cursor()
     c.execute('''SELECT * FROM progress WHERE participant=? AND rule_num=? AND day=?''', (participant, rule_num, day))
     result = c.fetchone()
@@ -29,7 +29,7 @@ def save_checkbox_status(participant, rule_num, day, checked):
     conn.close()
     
 def get_checkbox_status(participant, rule_num, day):
-    conn = sqlite3.connect("75hard.sqlite3")
+    conn = sqlite3.connect("75hard.db")
     c = conn.cursor()
     c.execute('''SELECT checked FROM progress WHERE participant=? AND rule_num=? AND day=?''', (participant, rule_num, day))
     result = c.fetchone()
@@ -61,7 +61,7 @@ def participant_tracker(participant_name):
     st.write("---")
         
 def display_progress_graph(participant_name):
-    conn = sqlite3.connect("75hard.sqlite3")
+    conn = sqlite3.connect("75hard.db")
     c = conn.cursor()
     c.execute('''SELECT day, SUM(checked) FROM progress WHERE participant=? GROUP BY day''', (participant_name,))
     result = c.fetchall()
