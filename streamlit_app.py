@@ -70,12 +70,12 @@ def display_progress_graph(participant_name):
     df = pd.DataFrame()
     dates = [r[0] for r in result]
     progress = [r[1] for r in result]
-    df.dates = dates
-    df.progress = progress
-    df.participant = participant_name
+    df['date'] = dates
+    df['progress'] = progress
+    df['participant'] = participant_name
     
     st.subheader(f"Progress Graph for {participant_name}")
-    st.line_chart(data=df, x=dates,y=progress, use_container_width=True)
+    st.line_chart(data=df, x=df['date'] ,y=df['progress'], use_container_width=True)
     st.dataframe(df)
 
 # Main function to display the tracker for both participants
