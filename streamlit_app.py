@@ -103,7 +103,7 @@ def load_data():
     try:
         with open("75hard.csv", "r", newline="") as file:
             reader = csv.DictReader(file)
-            data = {row["participant"]: {row["day"]: {f"rule_{i}": int(row[f"rule_{i}"]) for i in range(1, 6)}} for row in reader}
+            data = {row["participant"]: {row["day"]: {f"rule_{i}": int(row[f"rule_{i}"]) for i in range(1, 7)}} for row in reader}
     except FileNotFoundError:
         data = {}
     return data
@@ -111,7 +111,7 @@ def load_data():
 # Function to save data to CSV file
 def save_data(data):
     with open("75hard.csv", "w", newline="") as file:
-        fieldnames = ["participant", "day", "rule_1", "rule_2", "rule_3", "rule_4", "rule_5"]
+        fieldnames = ["participant", "day", "rule_1", "rule_2", "rule_3", "rule_4", "rule_5", "rule_6"]
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
         for participant, days in data.items():
@@ -151,7 +151,7 @@ def participant_tracker(participant_name):
 def display_progress_graph(participant_name):
     data = load_data()
     if participant_name in data:
-        df = pd.DataFrame.from_dict(data[participant_name], orient='index')
+        df = pd.DataFrame(data[participant_name], orient='index')
         df.index.name = 'Date'
         st.subheader(f"Progress Graph for {participant_name}")
         st.line_chart(df.sum(axis=1), use_container_width=True)
