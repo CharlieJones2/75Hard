@@ -1,6 +1,7 @@
 import streamlit as st
 from datetime import datetime
 import sqlite3
+import pandas as pd
 
 def create_table_if_not_exists():
     conn = sqlite3.connect("75hard.db")
@@ -66,11 +67,16 @@ def display_progress_graph(participant_name):
     result = c.fetchall()
     conn.close()
     
+    df = pd.dataframe()
     dates = [r[0] for r in result]
     progress = [r[1] for r in result]
+    df.dates = dates
+    df.progress = progress
+    df.participant = participant_name
     
     st.subheader(f"Progress Graph for {participant_name}")
-    st.line_chart(data=progress, labels=dates, use_container_width=True)
+    st.line_chart(progress, df, use_container_width=True)
+    st.dataframe(df)
 
 # Main function to display the tracker for both participants
 def main():
