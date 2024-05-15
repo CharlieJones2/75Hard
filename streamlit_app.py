@@ -67,7 +67,7 @@ def display_progress_graph(participant_name):
     result = c.fetchall()
     conn.close()
     
-    df = pd.dataframe()
+    df = pd.DataFrame()
     dates = [r[0] for r in result]
     progress = [r[1] for r in result]
     df.dates = dates
