@@ -75,7 +75,7 @@ def display_progress_graph(participant_name):
     df.participant = participant_name
     
     st.subheader(f"Progress Graph for {participant_name}")
-    st.line_chart(progress, df, use_container_width=True)
+    st.line_chart(data=df, x=dates,y=progress use_container_width=True)
     st.dataframe(df)
 
 # Main function to display the tracker for both participants
