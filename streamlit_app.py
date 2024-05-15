@@ -40,25 +40,24 @@ def get_checkbox_status(participant, rule_num, day):
 
 def participant_tracker(participant_name):
     st.subheader(f"Tracker for {participant_name}")
-    for day in range(1, 76):
-        day_date = datetime.now().strftime('%Y-%m-%d')
-        st.write(f"Day {day_date}:")
-        rule1_checked = st.checkbox(f"Rule 1: Follow a diet (No cheat meals, No alcohol)", key=f"{participant_name}_rule1_{day}", value=get_checkbox_status(participant_name, 1, day_date))
-        save_checkbox_status(participant_name, 1, day_date, 1 if rule1_checked else 0)
-        
-        rule2_checked = st.checkbox(f"Rule 2: Drink 1 gallon (3.7 liters) of water", key=f"{participant_name}_rule2_{day}", value=get_checkbox_status(participant_name, 2, day_date))
-        save_checkbox_status(participant_name, 2, day_date, 1 if rule2_checked else 0)
-        
-        rule3_checked = st.checkbox(f"Rule 3: Exercise twice a day, at least 45 minutes each time", key=f"{participant_name}_rule3_{day}", value=get_checkbox_status(participant_name, 3, day_date))
-        save_checkbox_status(participant_name, 3, day_date, 1 if rule3_checked else 0)
-        
-        rule4_checked = st.checkbox(f"Rule 4: Read 10 pages of non-fiction/self-help book", key=f"{participant_name}_rule4_{day}", value=get_checkbox_status(participant_name, 4, day_date))
-        save_checkbox_status(participant_name, 4, day_date, 1 if rule4_checked else 0)
-        
-        rule5_checked = st.checkbox(f"Rule 5: Take a progress picture", key=f"{participant_name}_rule5_{day}", value=get_checkbox_status(participant_name, 5, day_date))
-        save_checkbox_status(participant_name, 5, day_date, 1 if rule5_checked else 0)
+    day_date = datetime.now().strftime('%Y-%m-%d')
+    st.write(f"Day {day_date}:")
+    rule1_checked = st.checkbox(f"Rule 1: Follow a diet (No cheat meals, No alcohol)", value=get_checkbox_status(participant_name, 1, day_date))
+    save_checkbox_status(participant_name, 1, day_date, 1 if rule1_checked else 0)
+    
+    rule2_checked = st.checkbox(f"Rule 2: Drink 1 gallon (3.7 liters) of water", value=get_checkbox_status(participant_name, 2, day_date))
+    save_checkbox_status(participant_name, 2, day_date, 1 if rule2_checked else 0)
+    
+    rule3_checked = st.checkbox(f"Rule 3: Exercise twice a day, at least 45 minutes each time", value=get_checkbox_status(participant_name, 3, day_date))
+    save_checkbox_status(participant_name, 3, day_date, 1 if rule3_checked else 0)
+    
+    rule4_checked = st.checkbox(f"Rule 4: Read 10 pages of non-fiction/self-help book", value=get_checkbox_status(participant_name, 4, day_date))
+    save_checkbox_status(participant_name, 4, day_date, 1 if rule4_checked else 0)
+    
+    rule5_checked = st.checkbox(f"Rule 5: Take a progress picture", value=get_checkbox_status(participant_name, 5, day_date))
+    save_checkbox_status(participant_name, 5, day_date, 1 if rule5_checked else 0)
 
-        st.write("---")
+    st.write("---")
         
 def display_progress_graph(participant_name):
     conn = sqlite3.connect("75hard.db")
@@ -77,15 +76,13 @@ def display_progress_graph(participant_name):
 def main():
     create_table_if_not_exists()
     st.title("75 Hard Challenge Tracker")
-    participant1 = st.text_input("Participant 1 Name:")
-    participant2 = st.text_input("Participant 2 Name:")
+    participant1 = "Charlie"
+    participant2 = "Oliwia"
+    participant = st.radio("Hey :)",[participant1,participant2])
     
-    if participant1 and participant2:
-        participant_tracker(participant1)
-        display_progress_graph(participant1)
-        
-        participant_tracker(participant2)
-        display_progress_graph(participant2)
+    participant_tracker(participant)
+    display_progress_graph(participant1)
+    display_progress_graph(participant2)
 
 if __name__ == "__main__":
     main()
