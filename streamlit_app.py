@@ -63,7 +63,7 @@ def participant_tracker(participant_name):
 def display_progress_graph(participant_name):
     conn = sqlite3.connect("75hard.sqlite3")
     c = conn.cursor()
-    c.execute('''SELECT day, SUM(checked) FROM progress WHERE participant=? GROUP BY day''', (participant_name))
+    c.execute('''SELECT day, SUM(checked) FROM progress WHERE participant=? GROUP BY day''', (participant_name,))
     result = c.fetchall()
     conn.close()
     
