@@ -52,7 +52,7 @@ def participant_tracker(participant_name):
     rule3_checked = st.checkbox(f"Rule 3: Exercise twice a day, at least 45 minutes each time", value=get_checkbox_status(participant_name, 3, day_date))
     save_checkbox_status(participant_name, 3, day_date, 1 if rule3_checked else 0)
     
-    rule4_checked = st.checkbox(f"Rule 4: Read 10 pages of non-fiction/self-help book", value=get_checkbox_status(participant_name, 4, day_date))
+    rule4_checked = st.checkbox(f"Rule 4: Read 10 pages of a book", value=get_checkbox_status(participant_name, 4, day_date))
     save_checkbox_status(participant_name, 4, day_date, 1 if rule4_checked else 0)
     
     rule5_checked = st.checkbox(f"Rule 5: Take a progress picture", value=get_checkbox_status(participant_name, 5, day_date))
@@ -63,7 +63,7 @@ def participant_tracker(participant_name):
 def display_progress_graph(participant_name):
     conn = sqlite3.connect("75hard.sqlite3")
     c = conn.cursor()
-    c.execute('''SELECT day, SUM(checked) FROM progress WHERE participant=? GROUP BY day''', (participant_name,))
+    c.execute('''SELECT day, SUM(checked) FROM progress WHERE participant=? GROUP BY day''', (participant_name))
     result = c.fetchall()
     conn.close()
     
