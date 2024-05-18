@@ -97,7 +97,7 @@ import pandas as pd
 from datetime import datetime
 
 # Function to load the CSV file
-@st.cache
+@st.cache_data
 def load_data():
     return pd.read_csv('75hardtemplate.csv')
 
