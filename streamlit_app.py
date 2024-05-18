@@ -95,15 +95,48 @@ import streamlit as st
 
 import pandas as pd
 from datetime import datetime
+import requests
+import base64
+import json
+
+GITHUB_REPO = "charliejones2/75hard"
+GITHUB_TOKEN = "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"
+GITHUB_FILE_PATH = "75hardtemplate.csv"
 
 # Function to load the CSV file
 @st.cache
 def load_data():
-    return pd.read_csv('75hardtemplate.csv')
+    url = f"https://raw.githubusercontent.com/{GITHUB_REPO}/main/{GITHUB_FILE_PATH}"
+    return pd.read_csv(url)
 
-# Function to save the updated DataFrame back to CSV
-def save_data(df):
-    df.to_csv('75hardtemplate.csv', index=False)
+# Function to get the SHA of the existing file on GitHub
+def get_file_sha():
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{GITHUB_FILE_PATH}"
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}"
+    }
+    response = requests.get(url, headers=headers)
+    response_json = response.json()
+    return response_json['sha']
+
+# Function to save the updated DataFrame back to GitHub
+def save_data_to_github(df):
+    file_content = df.to_csv(index=False)
+    file_content_encoded = base64.b64encode(file_content.encode()).decode()
+    sha = get_file_sha()
+
+    commit_message = "Update tasks.csv from Streamlit app"
+    data = {
+        "message": commit_message,
+        "content": file_content_encoded,
+        "sha": sha
+    }
+    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{GITHUB_FILE_PATH}"
+    headers = {
+        "Authorization": f"token {GITHUB_TOKEN}"
+    }
+    response = requests.put(url, headers=headers, data=json.dumps(data))
+    return response.status_code
 
 # Load the CSV file
 df = load_data()
@@ -135,9 +168,12 @@ if st.button('Update Tasks'):
             # Find the row that matches the current date, person, and task number
             mask = (df['date'] == current_date) & (df['person'] == person) & (df['task'] == task_num)
             df.loc[mask, 'completed'] = 1
-    # Save the updated DataFrame back to the CSV
-    save_data(df)
-    st.success("Tasks updated successfully!")
+    # save back to github
+    status_code = save_data_to_github(df)
+    if status_code == 200:
+        st.success("Tasks updated and saved to GitHub successfully!")
+    else:
+        st.error(f"Failed to save to GitHub. Status code: {status_code}")
 
 # Display the updated DataFrame (for debugging purposes)
 st.dataframe(df)
